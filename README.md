@@ -1,13 +1,13 @@
 mainTopicChange.py:
 - Main program to run the whole process for specified time frame
-- Use: python mainTopicChange.py date1 period [date2]
+- Use: python mainTopicChange.py date1 date2 period
 - Examples:
-    python mainTopicChange.py 1950-01-01 five
-    python mainTopicChange.py 1950-01-01 decade 1955-01-01
+    python mainTopicChange.py 1950-01-01 1955-01-01 five
+    python mainTopicChange.py 1950-01-01 1955-01-01 decade
 
 UseWord2Vec.py:
 - Program to use word2vec over already aggregated text for specified time frame
-- Use: python UseWord2Vec.py load/save date1 period [date2]
+- Use: python UseWord2Vec.py choice date1 period [date2]
 - Examples:
     python UseWord2Vec.py load 1950-01-01 five
     python UseWord2Vec.py load 1950-01-01 decade
@@ -23,6 +23,9 @@ CalculateTFIDF.py:
 
 AggregateText.py:
 - Program to perform aggregation over all text in time frame
+- Use: python AggregateText.py date1 date2
+- Examples:
+    python AggregateText.py 1950-01-01 1955-01-01
 
 connectDB.py:
 - Connects to DB, and obtains all data from the database for specified time frame
