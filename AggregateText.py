@@ -77,4 +77,4 @@ if __name__ == '__main__':
         at.aggregateTheText(date,allCases)
 
     else:
-        print "Wrong number of arguments.\npython mainTopicChange.py date1 date2"
+        print "Wrong number of arguments.\npython AggregateText.py date1 date2"
