@@ -7,6 +7,7 @@ import unicodecsv as csv
 import traceback
 import os
 from nltk import word_tokenize
+import connectDB as cdb
 
 tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
@@ -61,3 +62,19 @@ def aggregateTheText(date,data):
     writer.writerows(entireText)
     print "Written file."
     f.close()
+
+if __name__ == '__main__':
+    # Call options:
+    # 1. python AggregateText.py 1950-01-01 1955-01-01
+    # 2. python AggregateText.py 1950-01-01 1955-01-01
+    if len(sys.argv)>1:
+        date = sys.argv[1]
+        period = sys.argv[3]
+        date2 = sys.argv[2]
+        print "Arguments given: ",date,period,date2
+        db = cdb.connect()
+        allCases = cdb.extractCases(db,date,date2)
+        at.aggregateTheText(date,allCases)
+
+    else:
+        print "Wrong number of arguments.\npython mainTopicChange.py date1 date2"
