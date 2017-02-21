@@ -1,44 +1,62 @@
 import connectDB as cdb
 import CalculateTFIDF as tfidf
-import json
 import UseWord2Vec as w2v
 import AggregateText as at
 import os
+import sys
 import ConstantStrings as cs
 
 if __name__ == "__main__":
-    #dates = [('1950-01-01','1960-01-01'),('1960-01-01','1970-01-01'),('1970-01-01','1980-01-01'),('1980-01-01','1990-01-01'),('1990-01-01','2000-01-01'),('2000-01-01','2010-01-01'),('2010-01-01',None)]
-    #'1950-01-01','1955-01-01','1960-01-01','1965-01-01','1970-01-01','1975-01-01','1980-01-01',
-    fif_year_date_string = ['1985-01-01','1990-01-01','1995-01-01','2000-01-01','2005-01-01','2010-01-01','2015-01-01',None]
-    dates = []
-    for i in range(len(fif_year_date_string)-1):
-        dates.append((fif_year_date_string[i],fif_year_date_string[i+1]))
-    print dates
-    #dates = [('1950-01-01','1955-01-01'),('1955-01-01','1960-01-01'),('1960-01-01','1965-01-01''1970-01-01'),('1970-01-01','1980-01-01'),('1980-01-01','1990-01-01'),('1990-01-01','2000-01-01'),('2000-01-01','2010-01-01'),('2010-01-01',None)]
-    for d1,d2 in dates:
-        print "Checking date range:",d1," - ",d2
-        #filename = d1+cs.postfix_json
-        # Check if .json file exists - only if it doesn't, call extract cases to create it
-        #if not os.path.isfile(filename):
-        #    print filename," not present."
-        # Open .json file and obtain data
-        filename = os.path.join(cs.path_at_fifty,d1+cs.postfix_aggr_fif)
-        # Check if aggregate data text file exists - if not present call function to create
-        #if not os.path.isfile(filename):
-        #    print filename," not present."
-        db = cdb.connect()
-        allCases = cdb.extractCases(db,d1,d2)
-        at.aggregateTheText(d1, allCases)
+    # Call options:
+    # 1. python mainTopicChange.py 1950-01-01 five
+    # 2. python mainTopicChange.py 1950-01-01 decade 1955-01-01
+    if len(sys.argv)>1:
+        date = sys.argv[1]
+        period = sys.argv[2]
+        print "Arguments given: ",date,period,
+        if period == "decade":
+            date2 = sys.argv[3]
+            print date2
+        print ""
+        if period == "five":
+            # Option 1
+            # Check if aggregate file exists or user wants it, and perform aggregation:
+            filename = os.path.join(cs.path_aggr_five,date+cs.postfix_aggr_five)
+            ch = "n"
+            if os.path.isfile(filename):
+                ch = raw_input("Do you want to perform aggregation? (y/n)")
+            if not os.path.isfile(filename) or ch == "y":
+                db = cdb.connect()
+                allCases = cdb.extractCases(db,date,date2)
+                at.aggregateTheText(date1,allCases)
 
-        '''
-        filename = d1+cs.postfix_tf
-        # Check if TF file present - if not present call function to find tf
-        if not os.path.isfile(filename):
-            print filename, " not present."
-            tfidf.calculateTF(d1)
-            # call function to calculate TF
-        # Questions? - How to pre-process data from .json file?
-        w2v.convertTextToVector(d1)
-        #fileip.close()
-        '''
-        print "Iteration over...."
+            # Perform Word2Vec:
+            entireText = w2v.CSV_to_list(date)
+            w2v.convertTextToVector(entireText,period)
+
+            # Perform TF:
+            entireText = tfidf.CSV_to_list(date)
+            tfidf.calculateTF(entireText,date,period)
+        else:
+            # Option 2
+            # Check if aggregate file exists or wants it, and perform aggregation:
+            filename = os.path.join(cs.path_aggr_five,date+cs.postfix_aggr_five)
+            ch = "n"
+            if os.path.isfile(filename):
+                ch = raw_input("Do you want to perform aggregation? (y/n)")
+            if not os.path.isfile(filename) or ch == "y":
+                db = cdb.connect()
+                allCases = cdb.extractCases(db,date,date2)
+                at.aggregateTheText(date,allCases)
+
+            # Perform Word2Vec:
+            entireText = w2v.CSV_to_list(date)
+            entireText += w2v.CSV_to_list(date2)
+            w2v.convertTextToVector(entireText,period)
+
+            # Perform TF:
+            entireText = tfidf.CSV_to_list(date)
+            entireText.extend(tfidf.CSV_to_list(date2))
+            tfidf.calculateTF(entireText,date,period)
+    else:
+        print "Wrong number of arguments.\npython mainTopicChange.py date1 period [date2]"
