@@ -26,7 +26,7 @@ def CSV_to_list(date):
             entireText.append(to_add)
     return entireText
 
-def convertTextToVector(entireText,period):
+def convertTextToVector(entireText,date,period):
     # 1. Train model using word2vec
     # 2. Save model in file
     # 3. Display output for "race", "crime", "criminal", "civil rights", "intellectual property"
@@ -85,13 +85,13 @@ if __name__ == '__main__':
                 # Option 3
                 print "Date: ",date
                 entireText = CSV_to_list(date)
-                convertTextToVector(entireText,period)
+                convertTextToVector(entireText,date,period)
             else:
                 # Option 4
                 date2 = sys.argv[4]
                 print "Date pair: ",date," and ",date2
                 entireText = CSV_to_list(date)
                 entireText += CSV_to_list(date2)
-                convertTextToVector(entireText,period)
+                convertTextToVector(entireText,date,period)
     else:
         print "Wrong number of arguments.\npython UseWord2Vec.py load/save date1 period [date2]"
