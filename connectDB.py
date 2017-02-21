@@ -1,7 +1,5 @@
 import MySQLdb
-import CasesWithText as cwt
 import ConstantStrings as cs
-import json
 
 def connect():
     db = MySQLdb.connect(host = cs.hostname , user = cs.username , passwd = cs.password , db = cs.databasename)
