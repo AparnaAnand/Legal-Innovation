@@ -74,7 +74,7 @@ if __name__ == '__main__':
         print "Arguments given: ",date,date2
         db = cdb.connect()
         allCases = cdb.extractCases(db,date,date2)
-        at.aggregateTheText(date,allCases)
+        aggregateTheText(date,allCases)
 
     else:
         print "Wrong number of arguments.\npython AggregateText.py date1 date2"
