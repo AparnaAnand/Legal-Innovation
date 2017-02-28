@@ -60,7 +60,7 @@ def loadWord2Vec(date,period):
         postfix = cs.postfix_models_decade
         path = cs.path_models_decade
     print "Model: "
-    model = models.Word2Vec.load(os.path.join(path,postfix))
+    model = models.Word2Vec.load(os.path.join(path,date+postfix))
     print "RACE:\n",model.most_similar('race',topn=20)
     print "CRIME:\n",model.most_similar('crime',topn=20)
     print "CRIMINAL:\n",model.most_similar('criminal',topn=20)
