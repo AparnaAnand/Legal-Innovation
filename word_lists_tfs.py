@@ -90,23 +90,6 @@ def join_tfs(period):
     for word in diff_set:
         writer.writerow([word,total_dict[word],year_list[word]])
     f.close()
-
-    # ADDING NEW CODE FOR NEWLY ADDED -----------------------------------
-
-    diff_by_year = defaultdict(list)
-    for word in diff_set:
-        year = year_list[word]
-        diff_by_year[year].append((word,total_dict[word]))
-    for year in diff_by_year:
-        diff_by_year[year] = sorted(diff_by_year[year], key = lambda x : x[1], reverse = True)[:20]
-    f = open("newly_added_by_year.csv","wb")
-    writer = csv.writer(f)
-    for year in diff_by_year:
-        for (word,score) in diff_by_year[year]:
-            writer.writerow([year,word,score])
-    f.close()
-    # -------------------------------------------------------------------
-
     print "Done"
 
 if __name__ == "__main__":
