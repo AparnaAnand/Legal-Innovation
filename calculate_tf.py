@@ -38,7 +38,6 @@ def calculate_TF(entire_text,date,period):
     total_words = 0
     TF = {}
     stops = []
-    #stops = set(stopwords.words("english"))
     with open(cs.stopwords_file,"r") as stop_file:
         for line in stop_file:
             stops.append(line.strip())
