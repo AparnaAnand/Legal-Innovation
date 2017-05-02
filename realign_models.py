@@ -33,7 +33,6 @@ def create_matrix(date,period,word_list):
 		if corr_word in model.vocab: # CHECK CASE DOESN'T EXIST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			mat.append(model[corr_word])
 		else:
-			'''
 			for voc_word in model.vocab:
 				old_voc = voc_word
 				voc_word = voc_word.lower()
@@ -42,18 +41,15 @@ def create_matrix(date,period,word_list):
 				if voc_word == '':
 					continue
 			'''
-			'''
 				if word=="pinpoints":
 					print old_voc,voc_word
 					raw_input()
-			'''
 			'''
 				if word == voc_word:
 					#print "Here", word,voc_word,old_voc
 					corr_word = old_voc
 					#print corr_word
 					break
-			'''
 			if corr_word not in model.vocab:
 				#print "Not found!",corr_word
 				#raw_input()
@@ -71,12 +67,13 @@ def create_matrix(date,period,word_list):
 
 def realign_models_all(period):
 	# 1. Find the years for which the models are present, create the year_list and sort it
-	# 2. Read the intersection file and store all words in file in a word_list
-	# 3. For each year period, cakk create_matrix to create the word embedding
+	# 2. Read the intersection file and newly added file and store all words in files in a word_list; also store year new words first occur in, in word_year
+	# 3. For each time period, call create_matrix to create the word embedding
 	# 4. Further call reorient() to realign the embedding of each year period (except first) wrt the previous year period's embedding
 	# 5. Store all realigned embeddings in order in aligned_matrices list
-	# 6. For each word in word_list, calculate the two scores (pairwise and last-first) from the aligned_matrices list. Store scores in score_diff_all and score_diff_first_last
-	# 7. Sort both score lists and write into separate files to hold the most changed words in sorted order
+	# 6. For each word in word_list, calculate the two scores (pairwise and last-first) from the aligned_matrices list
+	# 7. Store scores in i_score_diff_all and i_score_diff_first_last, for intersection words, and i_score_diff_all and i_score_diff_first_last for newly added words
+	# 8. Sort all score lists and write into separate files to hold the most changed words in sorted order
 
 	if period == "five":
 		path = cs.path_models_five
@@ -98,8 +95,6 @@ def realign_models_all(period):
 	print "YEARS: ",year_list
 	os.chdir(os.path.join("..",".."))
 	
-	# ADDING NEW CODE FOR NEWLY ADDED -----------------------------------
-
 	word_list = []
 	with open(os.path.join(tf_path,cs.intersection_file),"rb") as f:
 		for rec in csv.reader(f, delimiter=',', lineterminator='\n'):
@@ -235,7 +230,6 @@ def realign_models_all(period):
 		writer.writerow([y,word_list[i],sc])
 	f.close()
     '''
-    # -------------------------------------------------------------------
 
 if __name__ == '__main__':
 	# 1. python realign_models.py five
