@@ -1,13 +1,16 @@
-import re
-#from nltk.corpus import stopwords
 import constant_strings as cs
 import unicodecsv as csv
 import sys
 import os
 
+# Populate a global list of stop words from file
+STOPS = []
+with open(cs.stopwords_file,"r") as stop_file:
+    for line in stop_file:
+        STOPS.append(line.strip())
 
 def CSV_to_list(date):
-    # 1. Read aggregated csv file to obtain entire_text (list of words)
+    # 1. Read aggregated csv file to obtain entire_text (list of words - lowercased)
     # 2. Return entire_text (list of words)
     print "Inside CSV_to_list"
     entire_text = []
@@ -16,16 +19,18 @@ def CSV_to_list(date):
         for rec in csv.reader(f, delimiter=',', lineterminator='\n'):
             to_add = list(rec)
             to_add = filter(None, to_add)
+            to_add = [ch.lower() for ch in to_add]
             entire_text.extend(to_add)
     print "Created entire_text: ",len(entire_text)
     return entire_text
 
 
 def calculate_TF(entire_text,date,period):
-    # 1. Remove stop words from entire_text and make words lowercase
-    # 2. Create count dictionary for all words (also remove numbers and punctuations from words)
+    # 1. Create count dictionary for all words
+    # 2. For stop words in STOP, assign TF in count dictionary to 0
     # 3. Filter dictionary to contain words with count at least of min_count (5 for period=five, 10 for period=decade)
     # 4. Write filtered TF into TF output csv file
+    global STOPS
     print "Inside Calculate TF for: ",date,period
     if period == "five":
         path = cs.path_tf_five
@@ -37,16 +42,8 @@ def calculate_TF(entire_text,date,period):
         min_count = 10
     total_words = 0
     TF = {}
-    stops = []
-    with open(cs.stopwords_file,"r") as stop_file:
-        for line in stop_file:
-            stops.append(line.strip())
-    word_list = [word.lower() for word in entire_text if not word in stops]
-    print "Created word_list: ",len(word_list)
     print "Started calculating TF .. "
-    for word in word_list:
-        word = re.sub('\W', '', word)
-        word = re.sub('[0-9]', '', word)
+    for word in entire_text:
         if word == '':
             continue
         if word in TF:
@@ -55,6 +52,8 @@ def calculate_TF(entire_text,date,period):
             TF[word] = 1
         total_words += 1
     print "Created TF dictionary: ",len(TF)
+    for s in STOPS:
+        TF[s] = 0
     i=0
     print "Filtering TF"
     filtered_TF = {k:v for k,v in TF.iteritems() if v>=min_count}
