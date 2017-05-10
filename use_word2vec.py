@@ -5,7 +5,6 @@ import constant_strings as cs
 import unicodecsv as csv
 import sys
 import os
-import numpy
 
 cores = multiprocessing.cpu_count()
 assert gensim.models.doc2vec.FAST_VERSION > -1, "this will be painfully slow otherwise"
@@ -14,7 +13,7 @@ CHECK_WORDS = ['race','crime','criminal','civil rights','intellectual property',
 
 def CSV_to_list(date):
     # 1. Read aggregated csv file to obtain entire_text (list of lists)
-    # 2. Return entire_text - list of lists
+    # 2. Return entire_text - list of lists (words lowercased)
     print "Inside CSV to list"
     entire_text = []
     file_name = os.path.join(cs.path_aggr_five,date+cs.postfix_aggr_five)
@@ -74,6 +73,7 @@ def output_model_to_file(model,period):
     writer = csv.writer(f)
     for term in CHECK_WORDS:
         if term not in model.vocab:
+            print "Not found for ",term
             continue
         writer.writerow([term.upper()])
         similar_list = []
