@@ -75,6 +75,5 @@ if __name__ == '__main__':
         db = cdb.connect()
         all_cases = cdb.extract_cases(db,date,date2)
         aggregate_all_text(date,all_cases)
-
     else:
         print "Wrong number of arguments.\npython aggregate_text.py date1 date2"
