@@ -2,7 +2,6 @@ import unicodecsv as csv
 import sys
 import constant_strings as cs
 import glob, os
-from collections import defaultdict
 
 def CSV_to_list(file):
     # 1. Read file to obtain a list of (word,TF).
@@ -35,10 +34,8 @@ def join_tfs(period):
     # 5. Write filtered new_words into a file
     if period == "five":
         path = cs.path_tf_five
-        postfix = cs.postfix_tf_five
     else:
         path = cs.path_tf_decade
-        postfix = cs.postfix_tf_decade
     os.chdir(path)
     file_list = []
     for file in glob.glob("*_"+period+".csv"):
